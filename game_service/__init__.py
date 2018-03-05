@@ -33,3 +33,12 @@ def create_new_game():
 
     status = json.dumps(status)
     return status
+
+@app.route('/getGame/<int:game_id>', methods=['GET'])
+def get_game_info(game_id):
+    """
+    retrieve data for existing game
+    """
+
+    game = session.query(Game).filter(Game.id == game_id).first()
+    return json.dumps({"game_id":game.id, "game_state":game.game_state, "players":game.players})
