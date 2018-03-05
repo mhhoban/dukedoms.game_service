@@ -11,10 +11,9 @@ def create_new_game():
     """
     Endpoint for creating new game
     """
-    # host_player = request.form['hostId']
-    # invited_players = request.form['invitedPlayers']
+    players = request.get_json()
 
     game_state = 'pending'
-    new_game = Game(game_state=game_state)
+    new_game = Game(game_state=game_state, players=players)
     session.add(new_game)
     session.commit()

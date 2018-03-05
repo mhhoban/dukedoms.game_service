@@ -6,8 +6,8 @@ class Game(Base):
     __tablename__ = 'games'
     id = Column(Integer, primary_key=True)
     game_state = Column(String(50))
-    # players = Column(JSON)
+    players = Column(JSON)
 
-    def __init__(self, game_state=None):
+    def __init__(self, game_state=None, players=None):
         self.game_state = game_state
-        # self.players = players
+        self.players = players
