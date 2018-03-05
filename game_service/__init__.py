@@ -1,6 +1,7 @@
 import json
 
 from flask import Flask, request
+from flask.ext.api import status
 from sqlalchemy.exc import SQLAlchemyError
 
 from game_service.data_validation.data_validators import validate_new_game_request
@@ -18,7 +19,7 @@ def create_new_game():
     players = request.get_json()
 
     if not validate_new_game_request(players):
-        return json.dumps({'game_created': False, 'reason': 'missing players'})
+        return json.dumps({'game_created': False, 'reason': 'missing players'}), status.HTTP_400_BAD_REQUEST
 
     game_state = 'pending'
     new_game = Game(game_state=game_state, players=players)
@@ -26,13 +27,13 @@ def create_new_game():
 
     try:
         session.commit()
-        status = {'game_created': True, 'game_id': new_game.id}
+        response = {'game_created': True, 'game_id': new_game.id}
 
     except SQLAlchemyError:
-        status = {'game_created': False}
+        response = {'game_created': False}
 
-    status = json.dumps(status)
-    return status
+    response = json.dumps(response)
+    return response, status.HTTP_200_OK
 
 @app.route('/getGame/<int:game_id>', methods=['GET'])
 def get_game_info(game_id):
