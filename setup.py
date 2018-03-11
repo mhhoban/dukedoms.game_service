@@ -8,6 +8,7 @@ setup(
   install_requires=[
     'flask',
     'psycopg2',
-    'sqlalchemy'
+    'sqlalchemy',
+    'connexion'
     ]
 )

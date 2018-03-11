@@ -1,0 +1,49 @@
+swagger: "2.0"
+info:
+  title: Dukedoms of Daleria Game Service API
+  version: 0.1.0
+
+paths:
+  /newGame:
+    post:
+      summary: create new Game
+      x-swagger-router-controller: controllers.game_endpoints
+      operationId: create_new_game
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: newGameRequest
+          description: request to start process of making new game
+          schema:
+            type: object
+            required:
+              - hostPlayer
+              - invitedPlayers
+            properties:
+              hostPlayer:
+                type: string
+              invitedPlayers:
+                type: string
+      responses:
+        200:
+          description: game successfully created
+          schema:
+            type: object
+            properties:
+              gameCreated:
+                type: boolean
+              gameId:
+                type: integer
+
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              gameCreated:
+                type: boolean
+              reason:
+                type: string
