@@ -28,10 +28,10 @@ def create_new_game():
     response = json.dumps(response)
     return response, status.HTTP_200_OK
 
-def get_game_info(game_id):
+def get_game_info(gameId):
     """
     retrieve data for existing game
     """
 
-    game = session.query(Game).filter(Game.id == game_id).first()
+    game = session.query(Game).filter(Game.id == gameId).first()
     return json.dumps({"game_id":game.id, "game_state":game.game_state, "players":game.players})

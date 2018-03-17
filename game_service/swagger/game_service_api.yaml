@@ -46,3 +46,34 @@ paths:
                 type: boolean
               reason:
                 type: string
+
+  /getGame/{gameId}:
+    get:
+      x-swagger-router-controller: controllers.game_endpoints
+      operationId: get_game_info
+      summary: gets game data by its gameId
+      parameters:
+        - in: path
+          name: gameId
+          type: integer
+          required: true
+          description: integer id of a dukedoms game
+      produces:
+        - application/json
+      responses:
+        200:
+          description: game successfully retrieved
+          schema:
+            type: object
+            properties:
+              gameId:
+                type: integer
+              players:
+                type: object
+                properties:
+                  hostPlayer:
+                    type: string
+                  invitedPlayers:
+                    type: string
+              game_state:
+                type: string
