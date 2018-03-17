@@ -37,7 +37,6 @@ paths:
                 type: boolean
               gameId:
                 type: integer
-
         400:
           description: Bad Request
           schema:
