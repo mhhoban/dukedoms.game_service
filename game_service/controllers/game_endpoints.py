@@ -14,8 +14,14 @@ def create_new_game():
     Endpoint for creating new game
     """
     players = request.get_json()
+    host_player = players['hostPlayer']
+    invited_players = players['invitedPlayers']
     game_state = 'pending'
-    new_game = Game(game_state=game_state, players=players)
+    new_game = Game(
+        game_state=game_state,
+        invited_players=invited_players,
+        host_player=host_player
+    )
     session.add(new_game)
 
     try:
@@ -34,4 +40,4 @@ def get_game_info(gameId):
     """
 
     game = session.query(Game).filter(Game.id == gameId).first()
-    return json.dumps({"game_id":game.id, "game_state":game.game_state, "players":game.players})
+    return json.dumps({"game_id":game.id, "game_state":game.game_state, "host_player":game.host_player, "invited_players":game.invited_players})

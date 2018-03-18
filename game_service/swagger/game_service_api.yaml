@@ -18,34 +18,16 @@ paths:
           name: newGameRequest
           description: request to start process of making new game
           schema:
-            type: object
-            required:
-              - hostPlayer
-              - invitedPlayers
-            properties:
-              hostPlayer:
-                type: string
-              invitedPlayers:
-                type: string
+            $ref: '#/definitions/NewGameRequest'
       responses:
         200:
           description: game successfully created
           schema:
-            type: object
-            properties:
-              gameCreated:
-                type: boolean
-              gameId:
-                type: integer
+            $ref: '#/definitions/NewGameSuccessResponse'
         400:
           description: Bad Request
           schema:
-            type: object
-            properties:
-              gameCreated:
-                type: boolean
-              reason:
-                type: string
+            $ref: '#definitions/NewGameFailedResponse'
 
   /getGame/{gameId}:
     get:
@@ -64,16 +46,50 @@ paths:
         200:
           description: game successfully retrieved
           schema:
+            $ref: '#definitions/GameInfo'
+
+definitions:
+  NewGameRequest:
+    type: object
+    required:
+      - hostPlayer
+      - invitedPlayers
+    properties:
+      hostPlayer:
+        type: string
+      invitedPlayers:
+        type: object
+  NewGameSuccessResponse:
+      type: object
+      properties:
+        gameCreated:
+          type: boolean
+        gameId:
+          type: integer
+  NewGameFailedResponse:
+      type: object
+      properties:
+        gameCreated:
+          type: boolean
+        reason:
+          type: string
+  GameInfo:
+    type: object
+    properties:
+      gameId:
+        type: integer
+      players:
+        type: object
+        properties:
+          hostPlayer:
+            type: string
+          invitedPlayers:
             type: object
-            properties:
-              gameId:
-                type: integer
-              players:
-                type: object
-                properties:
-                  hostPlayer:
-                    type: string
-                  invitedPlayers:
-                    type: string
-              game_state:
-                type: string
+          acceptedPlayers:
+            type: object
+          pendingPlayers:
+            type: object
+          declinedPlayers:
+            type: object
+      game_state:
+        type: string
