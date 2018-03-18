@@ -10,6 +10,7 @@ class Game(Base):
     accepted_players = Column(JSON)
     invited_players = Column(JSON)
     declined_players = Column(JSON)
+    pending_players = Column(JSON)
     active_player = Column(Integer)
 
     def __init__(self, game_state=None, host_player=None, invited_players=None):

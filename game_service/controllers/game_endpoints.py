@@ -1,12 +1,12 @@
 import json
 
 import connexion
-from flask import current_app, Flask, request
+from flask import Flask, request
 from flask_api import status
 from sqlalchemy.exc import SQLAlchemyError
 
 from game_service.models.game import Game
-from game_service.shared.db import session, init_db
+from game_service.shared.db import session
 
 
 def create_new_game():
@@ -40,4 +40,14 @@ def get_game_info(gameId):
     """
 
     game = session.query(Game).filter(Game.id == gameId).first()
-    return json.dumps({"game_id":game.id, "game_state":game.game_state, "host_player":game.host_player, "invited_players":game.invited_players})
+    return json.dumps(
+        {
+            "gameId":game.id,
+            "gameState":game.game_state,
+            "hostPlayer":game.host_player,
+            "invitedPlayers":game.invited_players,
+            "acceptedPlayers":game.accepted_players,
+            "pendingPlayers":game.pending_players,
+            "declinedPlayers":game.declined_players
+        }
+    )

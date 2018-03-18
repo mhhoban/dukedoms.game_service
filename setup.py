@@ -1,14 +1,16 @@
 from setuptools import setup
 
 setup(
-  name='game_service',
+  name='dukedoms_game_service',
   version='0.1.0',
   description='microservice for managing game creation and state for Dukedoms of Daleria',
-  package='game_service',
+  package='dukedoms_game_service',
   install_requires=[
+    'addict',
+    'connexion',
     'flask',
     'psycopg2',
-    'sqlalchemy',
-    'connexion'
+    'retrying',
+    'sqlalchemy'
     ]
 )

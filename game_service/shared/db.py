@@ -1,8 +1,18 @@
+import os
+
+from flask import current_app
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine('postgresql+psycopg2://dukedoms:daleria@localhost:5432/game_service')
+from game_service.constants import URLS
+
+if os.environ.get('GAME_SERVICE_SETTINGS') == 'localconfig.cfg':
+    env = 'local'
+else:
+    env = 'container'
+
+engine = create_engine(URLS[env].rdbs)
 session = scoped_session(sessionmaker(bind=engine))
 
 Base = declarative_base()

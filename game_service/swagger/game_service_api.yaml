@@ -91,5 +91,5 @@ definitions:
             type: object
           declinedPlayers:
             type: object
-      game_state:
+      gameState:
         type: string
