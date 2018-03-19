@@ -14,6 +14,5 @@ app.app.config.from_object(GameServiceConfig)
 app.app.config.from_envvar('GAME_SERVICE_SETTINGS')
 
 app.add_api('game_service_api.yaml')
-@retry(wait_fixed=2000, stop_max_number_attempts=10)
 init_db()
 app.run(port=5000)
