@@ -7,7 +7,8 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from game_service.models.game import Game
 from game_service.shared.db import session
-
+from game_service.swagger_server.models.new_game_success_response import NewGameSuccessResponse
+from game_service.swagger_server.models.new_game_failed_response import NewGameFailedResponse
 
 def create_new_game():
     """
@@ -26,13 +27,17 @@ def create_new_game():
 
     try:
         session.commit()
-        response = {'game_created': True, 'game_id': new_game.id}
+        response = NewGameSuccessResponse(
+            game_created=True,
+            game_id=new_game.id
+        )
 
     except SQLAlchemyError:
-        response = {'game_created': False}
+        response = NewGameFailedResponse(
+            game_created=False
+        )
 
-    response = json.dumps(response)
-    return response, status.HTTP_200_OK
+    return response.to_dict(), status.HTTP_200_OK
 
 def get_game_info(gameId):
     """

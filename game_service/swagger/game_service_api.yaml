@@ -9,6 +9,8 @@ paths:
       summary: create new Game
       x-swagger-router-controller: controllers.game_endpoints
       operationId: create_new_game
+      tags:
+        - newGame
       consumes:
         - application/json
       produces:
@@ -27,12 +29,14 @@ paths:
         400:
           description: Bad Request
           schema:
-            $ref: '#definitions/NewGameFailedResponse'
+            $ref: '#/definitions/NewGameFailedResponse'
 
   /getGame/{gameId}:
     get:
       x-swagger-router-controller: controllers.game_endpoints
       operationId: get_game_info
+      tags:
+        - getGame
       summary: gets game data by its gameId
       parameters:
         - in: path
@@ -46,7 +50,7 @@ paths:
         200:
           description: game successfully retrieved
           schema:
-            $ref: '#definitions/GameInfo'
+            $ref: '#/definitions/GameInfo'
 
 definitions:
   NewGameRequest:
