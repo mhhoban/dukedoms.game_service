@@ -9,6 +9,10 @@ from game_service.models.game import Game
 from game_service.shared.db import session
 from game_service.swagger_server.models.new_game_success_response import NewGameSuccessResponse
 from game_service.swagger_server.models.new_game_failed_response import NewGameFailedResponse
+from game_service.swagger_server.models.game_info import GameInfo
+from game_service.swagger_server.models.game_info_players import GameInfoPlayers
+
+
 
 def create_new_game():
     """
@@ -45,14 +49,26 @@ def get_game_info(gameId):
     """
 
     game = session.query(Game).filter(Game.id == gameId).first()
-    return json.dumps(
-        {
-            "gameId":game.id,
-            "gameState":game.game_state,
-            "hostPlayer":game.host_player,
-            "invitedPlayers":game.invited_players,
-            "acceptedPlayers":game.accepted_players,
-            "pendingPlayers":game.pending_players,
-            "declinedPlayers":game.declined_players
-        }
+
+    game_players = GameInfoPlayers(
+        host_player=game.host_player,
+        invited_players=game.invited_players
     )
+
+    game_info = GameInfo(
+        game_id=game.id,
+        players=game_players
+    )
+
+    return game_info.to_dict(), status.HTTP_200_OK
+    # return json.dumps(
+    #     {
+    #         "gameId":game.id,
+    #         "gameState":game.game_state,
+    #         "hostPlayer":
+    #         "invitedPlayers":
+    #         "acceptedPlayers":game.accepted_players,
+    #         "pendingPlayers":game.pending_players,
+    #         "declinedPlayers":game.declined_players
+    #     }
+    # )
