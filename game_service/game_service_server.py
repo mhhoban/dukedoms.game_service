@@ -10,8 +10,6 @@ from game_service.shared.db import session, init_db
 from game_service.config import GameServiceConfig
 
 app = connexion.App(__name__, specification_dir='swagger/')
-app.app.config.from_object(GameServiceConfig)
-app.app.config.from_envvar('GAME_SERVICE_SETTINGS')
 
 app.add_api('game_service_api.yaml')
 init_db()

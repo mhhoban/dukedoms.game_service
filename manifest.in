@@ -1,1 +1,2 @@
 recursive-include game_service *.py
+recursive-include account_service/swagger *

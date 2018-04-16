@@ -13,7 +13,6 @@ from game_service.swagger_server.models.game_info import GameInfo
 from game_service.swagger_server.models.game_info_players import GameInfoPlayers
 
 
-
 def create_new_game():
     """
     Endpoint for creating new game
@@ -61,14 +60,3 @@ def get_game_info(gameId):
     )
 
     return game_info.to_dict(), status.HTTP_200_OK
-    # return json.dumps(
-    #     {
-    #         "gameId":game.id,
-    #         "gameState":game.game_state,
-    #         "hostPlayer":
-    #         "invitedPlayers":
-    #         "acceptedPlayers":game.accepted_players,
-    #         "pendingPlayers":game.pending_players,
-    #         "declinedPlayers":game.declined_players
-    #     }
-    # )

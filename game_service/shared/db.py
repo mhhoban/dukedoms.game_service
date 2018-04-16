@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from game_service.constants import URLS
 
-if os.environ.get('GAME_SERVICE_SETTINGS') == 'localconfig.cfg':
+if os.environ.get('GAME_SERVICE_ENV') == 'local':
     env = 'local'
 else:
     env = 'container'
