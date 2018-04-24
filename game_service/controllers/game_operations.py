@@ -42,21 +42,14 @@ def create_new_game():
 
     return response.to_dict(), status.HTTP_200_OK
 
-def get_game_info(gameId):
+
+def verify_player_pending(submitted_player=None, pending_players=None):
     """
-    retrieve data for existing game
+    Verify a given player is still pending before proceeding with accept/decline
     """
 
-    game = session.query(Game).filter(Game.id == gameId).first()
-
-    game_players = GameInfoPlayers(
-        host_player=game.host_player,
-        invited_players=game.invited_players
-    )
-
-    game_info = GameInfo(
-        game_id=game.id,
-        players=game_players
-    )
-
-    return game_info.to_dict(), status.HTTP_200_OK
+    try:
+        pending_players.index(submitted_player)
+        return True
+    except ValueError:
+        return False

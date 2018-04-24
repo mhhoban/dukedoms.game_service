@@ -16,4 +16,7 @@ class Game(Base):
     def __init__(self, game_state=None, host_player=None, invited_players=None):
         self.game_state = game_state
         self.host_player = host_player
-        self.invited_players = invited_players
+        self.invited_players = json.dumps({'invitedPlayers': invited_players})
+        self.accepted_players = json.dumps({'acceptedPlayers': []})
+        self.declined_players = json.dumps({'declinedPlayers': []})
+        self.declined_players = json.dumps({'pendingPlayers': invited_players})
