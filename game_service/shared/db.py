@@ -14,13 +14,21 @@ else:
     env = 'container'
 
 engine = create_engine(URLS[env].rdbs)
-session = scoped_session(sessionmaker(bind=engine))
-
 Base = declarative_base()
-Base.query = session.query_property
+
+def get_new_db_session():
+    return scoped_session(sessionmaker(bind=engine))
 
 @retry(wait_fixed=2000, stop_max_attempt_number=10)
 def init_db():
     # import models
     from game_service.models.game import Game
-    Base.metadata.create_all(bind=engine)
+
+    session = get_new_db_session()
+    try:
+        Base.query = session.query_property
+        Base.metadata.create_all(bind=engine)
+    except SQLAlchemyError:
+        raise SQLAlchemyError
+    finally:
+        session.close()

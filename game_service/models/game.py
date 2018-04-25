@@ -19,4 +19,4 @@ class Game(Base):
         self.invited_players = json.dumps({'invitedPlayers': invited_players})
         self.accepted_players = json.dumps({'acceptedPlayers': []})
         self.declined_players = json.dumps({'declinedPlayers': []})
-        self.declined_players = json.dumps({'pendingPlayers': invited_players})
+        self.pending_players = json.dumps({'pendingPlayers': invited_players})
