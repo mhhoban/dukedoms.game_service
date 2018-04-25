@@ -1,12 +1,19 @@
+from hamcrest import (
+    assert_that,
+    equal_to
+)
+
 from game_service.controllers.game_operations import (
+    player_accept_invite,
+    player_decline_invite,
     verify_player_pending
 )
 
-pending_players = ['testPlayer1', 'testPlayer2']
 
 def test_verify_player_pending_True():
 
-    submitted_player = 'pendingPlayer1'
+    pending_players = ['testPlayer1', 'testPlayer2']
+    submitted_player = 'testPlayer1'
 
     assert_that(
         verify_player_pending(
@@ -19,6 +26,7 @@ def test_verify_player_pending_True():
 
 def test_verify_player_pending_false():
 
+    pending_players = ['testPlayer1', 'testPlayer2']
     submitted_player = 'pendingPlayer3'
 
     assert_that(
@@ -31,6 +39,7 @@ def test_verify_player_pending_false():
 
 def test_decline_invitation():
 
+    pending_players = ['testPlayer1', 'testPlayer2']
     declined_player = 'testPlayer2'
     declined_players = []
 
@@ -46,12 +55,13 @@ def test_decline_invitation():
 
 def test_accept_invitation():
 
+    pending_players = ['testPlayer1', 'testPlayer2']
     accepted_player = 'testPlayer2'
     accepted_players = []
 
     player_accept_invite(
-        accepted_player=declined_player,
-        accepted_players=declined_players,
+        accepted_player=accepted_player,
+        accepted_players=accepted_players,
         pending_players=pending_players
     )
 

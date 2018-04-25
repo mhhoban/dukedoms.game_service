@@ -53,3 +53,22 @@ def verify_player_pending(submitted_player=None, pending_players=None):
         return True
     except ValueError:
         return False
+
+
+def player_decline_invite(declined_player=None, declined_players=None, pending_players=None):
+    if verify_player_pending(submitted_player=declined_player, pending_players=pending_players):
+        pending_players.remove(declined_player)
+        declined_players.append(declined_player)
+        return True
+
+    else:
+        return False
+
+def player_accept_invite(accepted_player=None, accepted_players=None, pending_players=None):
+    if verify_player_pending(submitted_player=accepted_player, pending_players=pending_players):
+        pending_players.remove(accepted_player)
+        accepted_players.append(accepted_player)
+        return True
+
+    else:
+        return False
