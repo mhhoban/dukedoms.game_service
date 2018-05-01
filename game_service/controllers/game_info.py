@@ -1,5 +1,4 @@
 from game_service.models.game import Game
-from game_service.shared.db import session
 from game_service.swagger_server.models.game_info import GameInfo
 from game_service.swagger_server.models.game_info_players import GameInfoPlayers
 

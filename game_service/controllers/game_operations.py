@@ -7,6 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from game_service.models.game import Game
 from game_service.shared.db import get_new_db_session
+from game_service.shared.oas_clients import account_service_client
 from game_service.swagger_server.models.new_game_success_response import NewGameSuccessResponse
 from game_service.swagger_server.models.new_game_failed_response import NewGameFailedResponse
 from game_service.swagger_server.models.game_info import GameInfo
@@ -43,7 +44,20 @@ def create_new_game():
     finally:
         session.close()
 
+    send_invite(game_id=new_game.id, players=invited_players)
+
     return response.to_dict(), status.HTTP_200_OK
+
+def send_invite(game_id=None, players=None):
+    """
+    send invite to account service
+    """
+    result, status = account_service_client.gameOperations.invite_accounts(
+        invitationBatch= {
+            'gameId': game_id,
+            'invitedPlayers': players
+        }
+    ).result()
 
 
 def accept_invite():

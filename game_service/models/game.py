@@ -1,3 +1,5 @@
+import json
+
 from sqlalchemy import Column, Integer, JSON, String
 
 from game_service.shared.db import Base
