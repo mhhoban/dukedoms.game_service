@@ -20,7 +20,7 @@ def create_new_game():
     """
     players = request.get_json()
     host_player = players['hostPlayer']
-    invited_players = players['invitedPlayers']
+    invited_players = players['invitedPlayers']['invitedPlayers']
     game_state = 'pending'
     new_game = Game(
         game_state=game_state,
@@ -64,23 +64,29 @@ def accept_invite():
     acceptance_info = request.get_json()
     game_id = acceptance_info['gameId']
     player_email = acceptance_info['playerEmail']
-
+    session = get_new_db_session()
     game = session.query(Game).filter(Game.id == game_id).first()
+
+    # TODO Not Sloppy JSON entry editing
+    game.accepted_players = json.loads(game.accepted_players)
+    game.pending_players = json.loads(game.pending_players)
 
     if not verify_player_pending(
         submitted_player=player_email,
-        pending_players=game.pending_players
+        pending_players=game.pending_players['pendingPlayers']
     ):
         return status.HTTP_400_BAD_REQUEST
 
     player_accept_invite(
         accepted_player=player_email,
-        accepted_players=game.accepted_players,
-        pending_players=game.pending_players
+        accepted_players=game.accepted_players['acceptedPlayers'],
+        pending_players=game.pending_players['pendingPlayers']
     )
 
     session = get_new_db_session()
     try:
+        game.accepted_players = json.dumps(game.accepted_players)
+        game.pending_players = json.dumps(game.pending_players)
         session.commit()
         return {'gameId': 13, 'playerId': 1337}, status.HTTP_200_OK
     except SQLAlchemyError:
@@ -140,6 +146,7 @@ def player_decline_invite(declined_player=None, declined_players=None, pending_p
         return False
 
 def player_accept_invite(accepted_player=None, accepted_players=None, pending_players=None):
+
     if verify_player_pending(submitted_player=accepted_player, pending_players=pending_players):
         pending_players.remove(accepted_player)
         accepted_players.append(accepted_player)
