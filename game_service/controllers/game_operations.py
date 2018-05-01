@@ -85,8 +85,15 @@ def accept_invite():
 
     session = get_new_db_session()
     try:
-        game.accepted_players = json.dumps(game.accepted_players)
-        game.pending_players = json.dumps(game.pending_players)
+        accepted_players = json.dumps(game.accepted_players)
+        pending_players = json.dumps(game.pending_players)
+
+        session.query(Game).filter(Game.id == game_id).update(
+            {"accepted_players":accepted_players}
+        )
+        session.query(Game).filter(Game.id == game_id).update(
+            {"pending_players":pending_players}
+        )
         session.commit()
         return {'gameId': 13, 'playerId': 1337}, status.HTTP_200_OK
     except SQLAlchemyError:
