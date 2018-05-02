@@ -107,22 +107,35 @@ def decline_invite():
     game_id = decline_info['gameId']
     player_email = decline_info['playerEmail']
 
+    session = get_new_db_session()
     game = session.query(Game).filter(Game.id == game_id).first()
+    # TODO Not Sloppy JSON entry editing
+    game.declined_players = json.loads(game.declined_players)
+    game.pending_players = json.loads(game.pending_players)
 
     if not verify_player_pending(
         submitted_player=player_email,
-        pending_players=game.pending_players
+        pending_players=game.pending_players['pendingPlayers']
     ):
         return status.HTTP_400_BAD_REQUEST
 
     player_decline_invite(
         declined_player=player_email,
-        declined_players=game.declined_players,
-        pending_players=game.pending_players
+        declined_players=game.declined_players['declinedPlayers'],
+        pending_players=game.pending_players['pendingPlayers']
     )
 
     session = get_new_db_session()
     try:
+        declined_players = json.dumps(game.declined_players)
+        pending_players = json.dumps(game.pending_players)
+
+        session.query(Game).filter(Game.id == game_id).update(
+            {"declined_players":declined_players}
+        )
+        session.query(Game).filter(Game.id == game_id).update(
+            {"pending_players":pending_players}
+        )
         session.commit()
         status.HTTP_200_OK
     except SQLAlchemyError:
