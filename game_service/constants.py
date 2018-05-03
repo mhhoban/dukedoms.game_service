@@ -6,3 +6,6 @@ URLS.container.rdbs = 'postgresql+psycopg2://postgres:daleria@dukedoms-rdbs:5432
 
 URLS.local.account_service = 'http://localhost:5002'
 URLS.container.account_service='http://account-service:5002'
+
+URLS.local.player_service= 'http://localhost:5004'
+URLS.container.player_service='http://player-service:5004'

@@ -7,7 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from game_service.models.game import Game
 from game_service.shared.db import get_new_db_session
-from game_service.shared.oas_clients import account_service_client
+from game_service.shared.oas_clients import account_service_client, player_service_client
 from game_service.swagger_server.models.new_game_success_response import NewGameSuccessResponse
 from game_service.swagger_server.models.new_game_failed_response import NewGameFailedResponse
 from game_service.swagger_server.models.game_info import GameInfo
@@ -64,6 +64,8 @@ def accept_invite():
     acceptance_info = request.get_json()
     game_id = acceptance_info['gameId']
     player_email = acceptance_info['playerEmail']
+    account_id = acceptance_info['accountId']
+
     session = get_new_db_session()
     game = session.query(Game).filter(Game.id == game_id).first()
 
@@ -95,7 +97,16 @@ def accept_invite():
             {"pending_players":pending_players}
         )
         session.commit()
-        return {'gameId': 13, 'playerId': 1337}, status.HTTP_200_OK
+
+        # hit new player endpoint
+        result, result_status = player_service_client.newPlayer.create_new_player(
+            newPlayerRequest = {
+                'accountId': account_id,
+                'gameId': game_id
+            }
+        ).result()
+
+        return {'gameId': result.game_id, 'playerId': result.player_id}, status.HTTP_200_OK
     except SQLAlchemyError:
         raise SQLAlchemyError
     finally:
