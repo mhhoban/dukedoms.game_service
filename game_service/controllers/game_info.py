@@ -7,6 +7,15 @@ from game_service.shared.db import get_new_db_session
 from game_service.swagger_server.models.game_info import GameInfo
 from game_service.swagger_server.models.game_info_players import GameInfoPlayers
 
+def get_player_id(gameId, playerEmail):
+
+    session = get_new_db_session()
+    game = session.query(Game).filter(Game.id == gameId).first()
+
+    player_id = json.loads(game.player_ids)['playerIds'][playerEmail]
+    session.close()
+    return {'playerId': player_id}, status.HTTP_200_OK
+
 def get_game_info(gameId):
     """
     retrieve data for existing game
