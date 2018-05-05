@@ -13,6 +13,7 @@ class Game(Base):
     invited_players = Column(JSON)
     declined_players = Column(JSON)
     pending_players = Column(JSON)
+    player_ids = Column(JSON)
     active_player = Column(Integer)
 
     def __init__(self, game_state=None, host_player=None, invited_players=None):
@@ -21,4 +22,5 @@ class Game(Base):
         self.invited_players = json.dumps({'invitedPlayers': invited_players})
         self.accepted_players = json.dumps({'acceptedPlayers': []})
         self.declined_players = json.dumps({'declinedPlayers': []})
+        self.player_ids = json.dumps({'playerIds': {}})
         self.pending_players = json.dumps({'pendingPlayers': invited_players})
