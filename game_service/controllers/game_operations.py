@@ -27,8 +27,8 @@ def end_player_turn():
     ending_player_id = json.loads(game.player_ids)['playerIds'][player]
 
     #get ID for next player in line
-    starting_player_index = (json.loads(game_state.player_turn_order)['player_turn_order'].index(player)) + 1
-    starting_player_email = json.loads(game_state.player_turn_order)['player_turn_order'][starting_player_index]
+    starting_player_index = (json.loads(game_state.player_turn_order)['playerTurnOrder'].index(player)) + 1
+    starting_player_email = json.loads(game_state.player_turn_order)['playerTurnOrder'][starting_player_index]
     starting_player_id = json.loads(game.player_ids)['playerIds'][starting_player_email]
 
     # End current player turn

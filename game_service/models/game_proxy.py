@@ -25,6 +25,12 @@ class GameProxy:
         """
         return self.player_ids[player_email]
 
+    def get_accepted_players(self):
+        """
+        return list of presently accepted players
+        """
+        return self.accepted_players
+
     def add_accepted_player(self, player_id=None, player_email=None, session=None, account_id=None):
         """
         add host player id directly to accepted players and player_ids

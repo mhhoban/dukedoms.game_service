@@ -14,3 +14,14 @@ def register_pending_player(account_id=None, game_id=None):
     ).result()
 
     return results.player_id
+
+def activate_pending_player(player_id=None, starting_phase=None):
+    """
+    send request to player service to activate pending player
+    """
+    result, status = player_service_client.gameOperations.activate_player(
+        activatePlayerRequest={
+            'playerId': player_id,
+            'startingPhase': starting_phase
+        }
+    ).result()

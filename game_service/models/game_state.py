@@ -13,5 +13,5 @@ class GameState(Base):
 
     def __init__(self, game_id=None, player_turn_order=None, active_player_id=None):
         self.game_id = game_id
-        self.player_turn_order = json.dumps({'player_turn_order': player_turn_order})
+        self.player_turn_order = json.dumps({'playerTurnOrder': player_turn_order})
         self.active_player_id = active_player_id
