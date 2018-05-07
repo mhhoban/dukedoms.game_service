@@ -86,6 +86,7 @@ class GameProxy:
         session.query(Game).filter(Game.id == self.game_id).update(
             {'pending_players': json.dumps({'pendingPlayers': self.pending_players})}
         )
+        session.commit()
 
     def verify_player_pending(self, player_email):
         """

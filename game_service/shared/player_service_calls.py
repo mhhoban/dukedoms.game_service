@@ -25,3 +25,14 @@ def activate_pending_player(player_id=None, starting_phase=None):
             'startingPhase': starting_phase
         }
     ).result()
+
+def player_phase_change(player_id=None, requested_phase=None):
+    """
+    sends request to player service to change player phase
+    """
+    result, query_status = player_service_client.gameOperations.player_phase_change(
+        phaseChangeRequest= {
+            'playerId': player_id,
+            'requestedPhase': requested_phase
+        }
+    ).result()

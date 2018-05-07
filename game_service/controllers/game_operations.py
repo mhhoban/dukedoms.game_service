@@ -5,9 +5,12 @@ from flask_api import status
 from sqlalchemy.exc import SQLAlchemyError
 
 from game_service.models.game import Game
+from game_service.models.game_proxy import GameProxy
 from game_service.models.game_state import GameState
+from game_service.models.game_state_proxy import GameStateProxy
 from game_service.shared.db import get_new_db_session
 from game_service.shared.oas_clients import account_service_client, player_service_client
+from game_service.shared.player_service_calls import player_phase_change
 from game_service.swagger_server.models.game_info import GameInfo
 from game_service.swagger_server.models.game_info_players import GameInfoPlayers
 
@@ -19,37 +22,21 @@ def end_player_turn():
     game_id = request.get_json()['gameId']
     player = request.get_json()['playerEmail']
 
-    session = get_new_db_session()
-    game = session.query(Game).filter(Game.id == game_id).first()
-    game_state = session.query(GameState).filter(GameState.game_id == game_id).first()
+    game = GameProxy(game_id)
+    game_state = GameStateProxy(game_id)
 
     #get ID for player ending turn
-    ending_player_id = json.loads(game.player_ids)['playerIds'][player]
+    ending_player_id = game.get_player_id(player)
 
     #get ID for next player in line
-    starting_player_index = (json.loads(game_state.player_turn_order)['playerTurnOrder'].index(player)) + 1
-    starting_player_email = json.loads(game_state.player_turn_order)['playerTurnOrder'][starting_player_index]
-    starting_player_id = json.loads(game.player_ids)['playerIds'][starting_player_email]
+    next_player_email = game_state.get_next_player_email(current_player=player)
+    next_player_id = game.get_player_id(next_player_email)
 
     # End current player turn
-    result, query_status = player_service_client.gameOperations.player_phase_change(
-        phaseChangeRequest= {
-            'playerId': ending_player_id,
-            'requestedPhase': 'inactive'
-        }
-    ).result()
-
+    player_phase_change(player_id=ending_player_id, requested_phase='inactive')
     # Start next player turn
-    result, query_status = player_service_client.gameOperations.player_phase_change(
-        phaseChangeRequest= {
-            'playerId': starting_player_id,
-            'requestedPhase': 'action'
-        }
-    ).result()
+    player_phase_change(player_id=next_player_id, requested_phase='action')
 
-    session.query(GameState).filter(GameState.game_id == game_id).update(
-        {'active_player_id': starting_player_id}
-    )
-    session.commit()
-    session.close()
+    game_state.update_active_player_id(next_player_id)
+
     return None, status.HTTP_200_OK
