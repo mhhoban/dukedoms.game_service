@@ -9,6 +9,7 @@ from game_service.models.game_proxy import GameProxy
 from game_service.models.game_state import GameState
 from game_service.shared.db import get_new_db_session
 from game_service.shared.oas_clients import account_service_client, player_service_client
+from game_service.shared.account_service_calls import new_hosted_game, send_invite
 from game_service.shared.player_service_calls import activate_pending_player
 from game_service.swagger_server.models.new_game_success_response import NewGameSuccessResponse
 
@@ -26,12 +27,7 @@ def create_new_game():
     game.add_accepted_player(account_id=players['hostPlayerId'], player_email=players['hostPlayer'])
     host_player_game_id = game.get_player_id(players['hostPlayer'])
 
-    result, result_status = account_service_client.gameOperations.new_hosted_game(
-        newHostedGameRequest={
-            'playerId': host_player_game_id,
-            'accountId': players['hostPlayerId']
-        }
-    ).result()
+    new_hosted_game(player_id=host_player_game_id, account_id=players['hostPlayerId'])
 
     send_invite(game_id=new_game_id, players=invited_players)
     response = NewGameSuccessResponse(
@@ -39,17 +35,6 @@ def create_new_game():
         game_id=new_game_id
     )
     return response.to_dict(), status.HTTP_200_OK
-
-def send_invite(game_id=None, players=None):
-    """
-    send invite to account service
-    """
-    result, status = account_service_client.gameOperations.invite_accounts(
-        invitationBatch= {
-            'gameId': game_id,
-            'playerList': players
-        }
-    ).result()
 
 
 def accept_invite():
