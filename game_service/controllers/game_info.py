@@ -19,23 +19,6 @@ def get_game_info(gameId):
     """
     retrieve data for existing game
     """
-
-    session = get_new_db_session()
-    game = session.query(Game).filter(Game.id == gameId).first()
-
-    game_players = GameInfoPlayers(
-        host_player=game.host_player,
-        invited_players=json.loads(game.invited_players),
-        accepted_players=json.loads(game.accepted_players),
-        declined_players=json.loads(game.declined_players),
-        pending_players=json.loads(game.pending_players)
-    )
-
-    game_info = GameInfo(
-        game_id=game.id,
-        players=game_players
-    )
-
-    session.close()
-
-    return game_info.to_dict(), status.HTTP_200_OK
+    game_id = gameId
+    game = GameProxy(game_id)
+    return game.get_game_info(), status.HTTP_200_OK

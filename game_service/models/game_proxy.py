@@ -107,3 +107,20 @@ class GameProxy:
             return False
         else:
             return True
+
+    def get_game_info(self):
+        """
+        returns basic info for the game
+        """
+
+        return {
+            'gameId' : self.game_id,
+            'players': {
+                'hostPlayer': self.host_player,
+                'invitedPlayers': self.invited_players,
+                'acceptedPlayers': self.accepted_players,
+                'pendingPlayers': self.pending_players,
+                'declinedPlayers': self.declined_players
+            },
+            'gameStatus': self.game_state
+        }

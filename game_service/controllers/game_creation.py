@@ -20,7 +20,7 @@ def create_new_game():
     """
     players = request.get_json()
     new_game_id = create_new_game_entry(players)
-    invited_players = players['invitedPlayers']['invitedPlayers']
+    invited_players = players['invitedPlayers']
 
     game = GameProxy(new_game_id)
     # Add host player:
@@ -95,7 +95,7 @@ def create_new_game_entry(players):
     """
     host_player = players['hostPlayer']
     host_player_id = players['hostPlayerId']
-    invited_players = players['invitedPlayers']['invitedPlayers']
+    invited_players = players['invitedPlayers']
     game_state = 'pending'
     new_game = Game(
         game_state=game_state,
